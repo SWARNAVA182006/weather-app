@@ -1,25 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather App</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weather App</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Weather App</h1>
-        <input type="text" id="cityInput" placeholder="Enter city name">
-        <button id="searchBtn">Get Weather</button>
-
-        <div id="weatherResult" class="hidden">
-            <h2 id="cityName"></h2>
-            <p id="temperature"></p>
-            <p id="description"></p>
-            <img id="weatherIcon" src="" alt="Weather Icon">
-        </div>
+  <div class="app-container">
+    <h1>Weather App</h1>
+    <div class="search-box">
+      <input type="text" id="cityInput" placeholder="Enter city name">
+      <button id="searchBtn">Search</button>
     </div>
 
-    <script src="script.js"></script>
+    <div class="weather-card hidden" id="weatherCard">
+      <h2 id="cityName"></h2>
+      <img id="weatherIcon" src="" alt="Weather Icon">
+      <p id="temperature"></p>
+      <p id="description"></p>
+      <p id="feels"></p>
+      <p id="humidity"></p>
+      <p id="wind"></p>
+      <button id="toggleUnit">Toggle °C/°F</button>
+    </div>
+    <p id="errorMsg" class="hidden"></p>
+  </div>
+
+<script src="script.js"></script>
 </body>
 </html>
