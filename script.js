@@ -1,4 +1,4 @@
-const apiKey = '34407a88364f4a6293e220200251810';
+const apiKey = '2ecae6763c9bcb92dd08c37f165b10ba';
 
 const searchBtn = document.getElementById('search-btn');
 const cityInput = document.getElementById('city-input');
@@ -33,28 +33,29 @@ async function getWeather(query){
     searchBtn.textContent = 'Loading...';
     clearError();
 
-    const res = await fetch(`https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${encodeURIComponent(query)}&aqi=no`);
+    const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(query)}&appid=${apiKey}&units=metric`);
     const data = await res.json();
 
-    if(data.error){
-      showError(data.error.message);
+    if(data.cod && data.cod !== 200){
+      showError(data.message);
       return;
     }
 
-    cityNameEl.textContent = `${data.location.name}, ${data.location.country}`;
-    temperature.textContent = `Temperature: ${data.current.temp_c.toFixed(1)}°C`;
-    feelsEl.textContent = `Feels Like: ${data.current.feelslike_c.toFixed(1)}°C`;
-    description.textContent = `Weather: ${capitalize(data.current.condition.text)}`;
-    humidityEl.textContent = `Humidity: ${data.current.humidity}%`;
-    windEl.textContent = `Wind: ${data.current.wind_kph} kph`;
+    cityNameEl.textContent = `${data.name}, ${data.sys.country}`;
+    temperature.textContent = `Temperature: ${data.main.temp.toFixed(1)}°C`;
+    feelsEl.textContent = `Feels Like: ${data.main.feels_like.toFixed(1)}°C`;
+    description.textContent = `Weather: ${capitalize(data.weather[0].description)}`;
+    humidityEl.textContent = `Humidity: ${data.main.humidity}%`;
+    windEl.textContent = `Wind: ${data.wind.speed} m/s`;
 
-    sunriseEl.textContent = `Sunrise: ${data.location.localtime.split(' ')[1]}`; // simplified
-    sunsetEl.textContent = `Sunset: --`; // WeatherAPI current endpoint doesn't have sunset
+    sunriseEl.textContent = `Sunrise: ${new Date(data.sys.sunrise*1000).toLocaleTimeString()}`;
+    sunsetEl.textContent = `Sunset: ${new Date(data.sys.sunset*1000).toLocaleTimeString()}`;
 
-    weatherIcon.src = data.current.condition.icon;
-    weatherIcon.alt = data.current.condition.text;
+    weatherIcon.src = `http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
+    weatherIcon.alt = data.weather[0].description;
 
-    await setBackgroundWithWeatherAPI(data.current.condition.text, data.location.localtime);
+    // Background logic (instant)
+    setBackgroundWithWeather(data);
 
     weatherCard.classList.remove('d-none');
 
@@ -79,29 +80,20 @@ function clearError(){
   errorMsg.textContent = '';
 }
 
-async function setBackgroundWithWeatherAPI(condition, localtime){
-  let file = 'day_sunny.jpeg'; // default
-  const c = condition.toLowerCase();
-
-  const hour = parseInt(localtime.split(' ')[1].split(':')[0]); // 24h format
+function setBackgroundWithWeather(data){
+  const hour = new Date((data.dt + data.timezone) * 1000).getUTCHours();
   const isNight = hour < 6 || hour >= 18;
 
-  if(c.includes('rain')) file = isNight ? 'night_rainy.jpeg' : 'day_rainy.jpeg';
-  else if(c.includes('cloud')) file = isNight ? 'night_cloudy.jpeg' : 'day_cloudy.jpeg';
-  else if(c.includes('mist') || c.includes('fog')) file = isNight ? 'night_mist.jpeg' : 'day_mist.jpeg';
-  else if(c.includes('clear') || c.includes('sunny')) file = isNight ? 'night_clear.jpeg' : 'day_sunny.jpeg';
+  const condition = data.weather[0].main.toLowerCase();
+  let file = 'day_sunny.jpeg'; // default
 
-  await preloadImage(`assets/backgrounds/${file}`);
+  if(condition.includes('rain')) file = isNight ? 'night_rainy.jpeg' : 'day_rainy.jpeg';
+  else if(condition.includes('cloud')) file = isNight ? 'night_cloudy.jpeg' : 'day_cloudy.jpeg';
+  else if(condition.includes('mist') || condition.includes('fog')) file = isNight ? 'night_mist.jpeg' : 'day_mist.jpeg';
+  else if(condition.includes('clear') || condition.includes('sun')) file = isNight ? 'night_clear.jpeg' : 'day_sunny.jpeg';
+
   document.body.style.backgroundImage = `url('assets/backgrounds/${file}')`;
   document.body.style.backgroundRepeat = 'no-repeat';
   document.body.style.backgroundSize = 'cover';
   document.body.style.backgroundPosition = 'center';
-}
-
-function preloadImage(url){
-  return new Promise(resolve => {
-    const img = new Image();
-    img.src = url;
-    img.onload = resolve;
-  });
 }
