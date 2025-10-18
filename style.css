@@ -7,6 +7,7 @@ body {
   flex-direction: column;
   align-items: center;
   color: #fff;
+  background-color: skyblue; /* default background */
 }
 
 header {
@@ -19,12 +20,13 @@ header {
 }
 
 header img#logo {
-  width: 60px;
-  margin-right: 10px;
+  width: 80px;
+  margin-right: 15px;
 }
 
 h1 {
   margin: 0;
+  font-size: 36px;
 }
 
 .search-section {
@@ -40,7 +42,7 @@ input {
   border-radius: 10px 0 0 10px;
   border: none;
   min-width: 250px;
-  font-size: 18px;
+  font-size: 20px;
 }
 
 button {
@@ -50,7 +52,7 @@ button {
   background-color: #ff9800;
   color: #fff;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 20px;
   transition: 0.3s;
 }
 
@@ -61,30 +63,30 @@ button:hover {
 .weather-card, .forecast, .hourly-forecast {
   background: rgba(0,0,0,0.3);
   border-radius: 15px;
-  padding: 20px;
-  margin: 10px;
+  padding: 25px;
+  margin: 15px;
   color: #fff;
   width: 90%;
-  max-width: 450px;
+  max-width: 500px;
   text-align: center;
 }
 
 .weather-card img.big-icon {
-  width: 120px;
-  height: 120px;
+  width: 150px;
+  height: 150px;
 }
 
 .weather-card p {
   display: flex;
   align-items: center;
-  margin: 5px 0;
-  font-size: 16px;
+  margin: 8px 0;
+  font-size: 18px;
 }
 
 .weather-card p img {
-  width: 18px;  
-  height: 18px;
-  margin-right: 8px;
+  width: 24px;  
+  height: 24px;
+  margin-right: 10px;
 }
 
 .hidden { display: none; }
@@ -98,9 +100,9 @@ button:hover {
 .forecast-card {
   background: rgba(255,255,255,0.2);
   border-radius: 10px;
-  padding: 10px;
+  padding: 12px;
   text-align: center;
-  min-width: 70px;
+  min-width: 80px;
   margin-right: 10px;
-  font-size: 14px;
+  font-size: 16px;
 }
