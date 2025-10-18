@@ -26,7 +26,7 @@ let isCelsius = true;
 // Event Listeners
 searchBtn.addEventListener('click', () => {
     const city = cityInput.value.trim();
-    if (!city) return alert("Enter a city name");
+    if (!city) return alert("Enter city name");
     getWeather(city);
 });
 
@@ -100,7 +100,6 @@ async function getWeather(city) {
         else if(mainWeather.includes("rain")) document.body.style.background = "url('assets/backgrounds/rainy.jpg') no-repeat center/cover";
         else document.body.style.background = "url('assets/backgrounds/clear_day.jpg') no-repeat center/cover";
 
-        // Get forecast (7-day + hourly)
         getForecast(data.coord.lat, data.coord.lon);
 
     } catch(err) {
@@ -115,7 +114,7 @@ async function getForecast(lat, lon) {
         const response = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,alerts&units=metric&appid=${apiKey}`);
         const data = await response.json();
 
-        // 7-day
+        // 7-day forecast
         forecastContainer.innerHTML = "";
         forecast.classList.remove('hidden');
         data.daily.slice(0, 7).forEach(day => {
@@ -131,7 +130,7 @@ async function getForecast(lat, lon) {
             forecastContainer.appendChild(card);
         });
 
-        // Hourly
+        // Hourly forecast
         hourlyContainer.innerHTML = "";
         hourlyForecast.classList.remove('hidden');
         data.hourly.slice(0, 12).forEach(hour => {
