@@ -7,7 +7,6 @@ body {
   flex-direction: column;
   align-items: center;
   color: #fff;
-  background: linear-gradient(to right, #6dd5ed, #2193b0);
 }
 
 header {
@@ -17,7 +16,6 @@ header {
   justify-content: center;
   padding: 15px;
   background: rgba(0,0,0,0.3);
-  position: relative;
 }
 
 header img#logo {
@@ -27,15 +25,6 @@ header img#logo {
 
 h1 {
   margin: 0;
-}
-
-#themeToggle {
-  position: absolute;
-  right: 20px;
-  padding: 5px 10px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
 }
 
 .search-section {
@@ -93,8 +82,8 @@ button:hover {
 }
 
 .weather-card p img {
-  width: 20px;
-  height: 20px;
+  width: 18px;  
+  height: 18px;
   margin-right: 8px;
 }
 

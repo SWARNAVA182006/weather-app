@@ -17,7 +17,6 @@ const forecast = document.getElementById('forecast');
 const forecastContainer = document.getElementById('forecastContainer');
 const hourlyForecast = document.getElementById('hourlyForecast');
 const hourlyContainer = document.getElementById('hourlyContainer');
-const themeToggle = document.getElementById('themeToggle');
 
 let currentTempC = 0;
 let currentFeelsC = 0;
@@ -38,18 +37,6 @@ toggleUnit.addEventListener('click', () => {
         temperature.textContent = `Temperature: ${currentTempC.toFixed(1)}°C`;
         feels.textContent = `Feels Like: ${currentFeelsC.toFixed(1)}°C`;
         isCelsius = true;
-    }
-});
-
-themeToggle.addEventListener('click', () => {
-    if (document.body.classList.contains('dark')) {
-        document.body.classList.remove('dark');
-        document.body.style.color = '#fff';
-        themeToggle.textContent = '🌙';
-    } else {
-        document.body.classList.add('dark');
-        document.body.style.color = '#000';
-        themeToggle.textContent = '☀️';
     }
 });
 
@@ -112,22 +99,29 @@ function setBackground(weatherMain, sunriseUnix, sunsetUnix, timezoneOffset) {
 
     let isNight = (localTime >= sunsetUnix || localTime < sunriseUnix);
 
-    let bgPath = "assets/backgrounds/";
+    let bgFile = "";
 
     if (isNight) {
-        if (weatherMain.includes("cloud")) bgPath += "night_cloudy.jpg";
-        else if (weatherMain.includes("rain")) bgPath += "night_rainy.jpg";
-        else bgPath += "night_clear.jpg";
+        if (weatherMain.includes("cloud")) bgFile = "night_cloudy.jpeg";
+        else if (weatherMain.includes("rain")) bgFile = "night_rainy.jpeg";
+        else bgFile = "night_clear.jpeg";
     } else {
-        if (weatherMain.includes("cloud")) bgPath += "day_cloudy.jpg";
-        else if (weatherMain.includes("rain")) bgPath += "day_rainy.jpg";
-        else bgPath += "day_sunny.jpg";
+        if (weatherMain.includes("cloud")) bgFile = "day_cloudy.jpeg";
+        else if (weatherMain.includes("rain")) bgFile = "day_rainy.jpeg";
+        else bgFile = "day_sunny.jpeg";
     }
 
-    document.body.style.backgroundImage = `url('${bgPath}')`;
-    document.body.style.backgroundRepeat = 'no-repeat';
-    document.body.style.backgroundSize = 'cover';
-    document.body.style.backgroundPosition = 'center';
+    const bgPath = `assets/backgrounds/${bgFile}`;
+
+    const body = document.body;
+    const img = new Image();
+    img.src = bgPath;
+    img.onload = () => {
+        body.style.backgroundImage = `url('${bgPath}')`;
+        body.style.backgroundRepeat = 'no-repeat';
+        body.style.backgroundSize = 'cover';
+        body.style.backgroundPosition = 'center';
+    };
 }
 
 async function getForecast(lat, lon) {
