@@ -94,11 +94,12 @@ async function getWeather(city) {
         sunset.textContent = `${new Date(data.sys.sunset*1000).toLocaleTimeString()}`;
         weatherIcon.src = `http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
 
-        // Dynamic background
-        const mainWeather = data.weather[0].main.toLowerCase();
-        if(mainWeather.includes("cloud")) document.body.style.background = "url('assets/backgrounds/cloudy.jpg') no-repeat center/cover";
-        else if(mainWeather.includes("rain")) document.body.style.background = "url('assets/backgrounds/rainy.jpg') no-repeat center/cover";
-        else document.body.style.background = "url('assets/backgrounds/clear_day.jpg') no-repeat center/cover";
+        // Dynamic background based on weather + day/night
+        const weatherMain = data.weather[0].main.toLowerCase();
+        const sunriseUnix = data.sys.sunrise;
+        const sunsetUnix = data.sys.sunset;
+        const timezoneOffset = data.timezone;
+        setBackground(weatherMain, sunriseUnix, sunsetUnix, timezoneOffset);
 
         getForecast(data.coord.lat, data.coord.lon);
 
@@ -106,6 +107,28 @@ async function getWeather(city) {
         alert("Error fetching weather data");
         console.error(err);
     }
+}
+
+// Set dynamic background
+function setBackground(weatherMain, sunriseUnix, sunsetUnix, timezoneOffset) {
+    const nowUTC = Math.floor(Date.now() / 1000);
+    const localTime = nowUTC + timezoneOffset;
+
+    let isNight = (localTime >= sunsetUnix || localTime < sunriseUnix);
+
+    let bgPath = "assets/backgrounds/";
+
+    if (isNight) {
+        if (weatherMain.includes("cloud")) bgPath += "night_cloudy.jpg";
+        else if (weatherMain.includes("rain")) bgPath += "night_rainy.jpg";
+        else bgPath += "night_clear.jpg";
+    } else {
+        if (weatherMain.includes("cloud")) bgPath += "day_cloudy.jpg";
+        else if (weatherMain.includes("rain")) bgPath += "day_rainy.jpg";
+        else bgPath += "day_sunny.jpg";
+    }
+
+    document.body.style.background = `url('${bgPath}') no-repeat center/cover`;
 }
 
 // Fetch 7-day + hourly forecast
