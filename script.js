@@ -1,3 +1,4 @@
+/* Final robust script.js (Bootstrap UI) */
 const apiKey = '2ecae6763c9bcb92dd08c37f165b10ba';
 
 const searchBtn = document.getElementById('searchBtn');
@@ -26,14 +27,17 @@ let currentTempC = null;
 let currentFeelsC = null;
 let isCelsius = true;
 
+// Enter key support
 cityInput.addEventListener('keydown', (e) => { if(e.key === 'Enter') searchBtn.click(); });
 
+// click search
 searchBtn.addEventListener('click', () => {
   const q = cityInput.value.trim();
   if(!q) return showError('Please enter a city name.');
   getWeather(q);
 });
 
+// show/hide error
 function showError(msg){
   errorMsg.textContent = msg;
   errorMsg.classList.remove('d-none');
@@ -41,6 +45,7 @@ function showError(msg){
 }
 function clearError(){ errorMsg.classList.add('d-none'); }
 
+// Toggle unit
 toggleUnit.addEventListener('click', () => {
   if(currentTempC === null) return;
   if(isCelsius){
@@ -54,9 +59,11 @@ toggleUnit.addEventListener('click', () => {
   }
 });
 
+// Main: fetch current weather then forecast
 async function getWeather(query){
   searchBtn.disabled = true;
   searchBtn.textContent = 'Loading...';
+
   try {
     clearError();
     let res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(query)}&appid=${apiKey}&units=metric`);
@@ -72,6 +79,7 @@ async function getWeather(query){
       return;
     }
 
+    // populate UI
     cityNameEl.textContent = `${data.name}, ${data.sys.country}`;
     currentTempC = data.main.temp;
     currentFeelsC = data.main.feels_like;
@@ -89,9 +97,15 @@ async function getWeather(query){
     weatherIcon.src = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
     weatherIcon.alt = data.weather[0].description || 'weather';
 
+    // set background (optimized)
     setBackgroundFast(data.weather[0].main.toLowerCase(), data.sys.sunrise, data.sys.sunset, tz);
+
+    // show logo
     logoEl.style.display = 'block';
+
+    // fetch forecast
     await getForecast(data.coord.lat, data.coord.lon);
+
     weatherCard.classList.remove('d-none');
 
   } catch(err){
@@ -145,6 +159,7 @@ async function getForecast(lat, lon){
   }
 }
 
+/* ---------------- Optimized Background ---------------- */
 function setBackgroundFast(weatherMain, sunriseUTC, sunsetUTC, timezoneOffset){
   try {
     const nowUTC = Math.floor(Date.now() / 1000);
@@ -173,6 +188,8 @@ function setBackgroundFast(weatherMain, sunriseUTC, sunsetUTC, timezoneOffset){
     }
 
     const path = `assets/backgrounds/${file}`;
+
+    // preload without blocking
     const img = new Image();
     img.src = path;
 

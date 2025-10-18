@@ -20,7 +20,7 @@ body{
 
 /* header */
 header{ background: rgba(0,0,0,0.18); }
-#logo{ width:90px; height:auto; display:block; }
+#logo{ width:90px; height:auto; }
 .app-title{ font-size:1.9rem; margin:0; }
 
 /* search */
