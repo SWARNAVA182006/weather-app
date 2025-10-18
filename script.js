@@ -1,4 +1,4 @@
-const apiKey = '42ade3d96d4ef53fc5f1311c5b858f07'; // Your OpenWeatherMap API Key
+const apiKey = '42ade3d96d4ef53fc5f1311c5b858f07'; // Your API Key
 
 const searchBtn = document.getElementById('searchBtn');
 const cityInput = document.getElementById('cityInput');
@@ -37,17 +37,28 @@ toggleUnit.addEventListener('click', () => {
   }
 });
 
-// Fetch weather data
+// Fetch weather data (India + Global)
 async function getWeather(city) {
   try {
-    // Make city name case-insensitive
-    const formattedCity = city.toLowerCase().split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+    // Format city name
+    const formattedCity = city.toLowerCase().split(' ')
+        .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+        .join(' ');
 
-    const response = await fetch(
+    // Try global search first
+    let response = await fetch(
       `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(formattedCity)}&appid=${apiKey}&units=metric`
     );
 
-    const data = await response.json();
+    let data = await response.json();
+
+    // If city not found globally, try adding ",IN" for India
+    if (data.cod !== 200) {
+      response = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(formattedCity)},IN&appid=${apiKey}&units=metric`
+      );
+      data = await response.json();
+    }
 
     if (data.cod !== 200) {
       errorMsg.textContent = "City not found!";
@@ -56,7 +67,7 @@ async function getWeather(city) {
       return;
     }
 
-    // Hide error and show card
+    // Hide error, show card
     errorMsg.classList.add('hidden');
     weatherCard.classList.remove('hidden');
 
@@ -80,6 +91,7 @@ async function getWeather(city) {
     else if(mainWeather.includes("clear")) document.body.style.background = "linear-gradient(to right, #f6d365, #fda085)";
     else if(mainWeather.includes("snow")) document.body.style.background = "linear-gradient(to right, #83a4d4, #b6fbff)";
     else document.body.style.background = "linear-gradient(to right, #6dd5ed, #2193b0)";
+
   } catch (err) {
     alert("Error fetching weather data");
     console.error(err);
