@@ -23,7 +23,6 @@ let currentTempC = 0;
 let currentFeelsC = 0;
 let isCelsius = true;
 
-// Event Listeners
 searchBtn.addEventListener('click', () => {
     const city = cityInput.value.trim();
     if (!city) return alert("Enter city name");
@@ -54,7 +53,6 @@ themeToggle.addEventListener('click', () => {
     }
 });
 
-// Fetch current weather
 async function getWeather(city) {
     try {
         const formattedCity = city.toLowerCase().split(' ')
@@ -94,7 +92,6 @@ async function getWeather(city) {
         sunset.textContent = `${new Date(data.sys.sunset*1000).toLocaleTimeString()}`;
         weatherIcon.src = `http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
 
-        // Dynamic background based on weather + day/night
         const weatherMain = data.weather[0].main.toLowerCase();
         const sunriseUnix = data.sys.sunrise;
         const sunsetUnix = data.sys.sunset;
@@ -109,7 +106,6 @@ async function getWeather(city) {
     }
 }
 
-// Set dynamic background
 function setBackground(weatherMain, sunriseUnix, sunsetUnix, timezoneOffset) {
     const nowUTC = Math.floor(Date.now() / 1000);
     const localTime = nowUTC + timezoneOffset;
@@ -128,10 +124,12 @@ function setBackground(weatherMain, sunriseUnix, sunsetUnix, timezoneOffset) {
         else bgPath += "day_sunny.jpg";
     }
 
-    document.body.style.background = `url('${bgPath}') no-repeat center/cover`;
+    document.body.style.backgroundImage = `url('${bgPath}')`;
+    document.body.style.backgroundRepeat = 'no-repeat';
+    document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundPosition = 'center';
 }
 
-// Fetch 7-day + hourly forecast
 async function getForecast(lat, lon) {
     try {
         const response = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,alerts&units=metric&appid=${apiKey}`);
