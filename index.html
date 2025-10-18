@@ -1,47 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Weather App</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header>
-    <img src="logo.png" alt="Logo" id="logo">
+  <header>
+    <img src="logo.png" id="logo" alt="logo">
     <h1>Weather App</h1>
-</header>
+  </header>
 
-<div class="search-section">
-    <input type="text" id="cityInput" placeholder="Enter city name">
-    <button id="searchBtn">Search</button>
-</div>
+  <main>
+    <section class="search-section">
+      <input id="cityInput" type="text" placeholder="Enter city name (e.g. Chennai)" />
+      <button id="searchBtn">Search</button>
+    </section>
 
-<p id="errorMsg" class="hidden"></p>
+    <p id="errorMsg" class="hidden"></p>
 
-<div class="weather-card hidden" id="weatherCard">
-    <h2 id="cityName"></h2>
-    <img id="weatherIcon" src="" alt="Weather Icon" class="big-icon">
-    <p id="temperature"></p>
-    <p id="feels"></p>
-    <p id="description"></p>
-    <p><img src="assets/icons/humidity.png" alt="humidity"> <span id="humidity"></span></p>
-    <p><img src="assets/icons/wind.png" alt="wind"> <span id="wind"></span></p>
-    <p><img src="assets/icons/sunrise.png" alt="sunrise"> <span id="sunrise"></span></p>
-    <p><img src="assets/icons/sunset.png" alt="sunset"> <span id="sunset"></span></p>
-    <button id="toggleUnit">Toggle °C/°F</button>
-</div>
+    <section id="weatherCard" class="weather-card hidden" aria-live="polite">
+      <h2 id="cityName"></h2>
+      <img id="weatherIcon" class="big-icon" alt="Weather icon">
+      <p id="temperature"></p>
+      <p id="feels"></p>
+      <p id="description"></p>
 
-<div class="hourly-forecast hidden" id="hourlyForecast">
-    <h3>Hourly Forecast</h3>
-    <div id="hourlyContainer" class="forecast-container"></div>
-</div>
+      <p><img src="assets/icons/humidity.png" alt="humidity"> <span id="humidity"></span></p>
+      <p><img src="assets/icons/wind.png" alt="wind"> <span id="wind"></span></p>
+      <p><img src="assets/icons/sunrise.png" alt="sunrise"> <span id="sunrise"></span></p>
+      <p><img src="assets/icons/sunset.png" alt="sunset"> <span id="sunset"></span></p>
 
-<div class="forecast hidden" id="forecast">
-    <h3>7-Day Forecast</h3>
-    <div id="forecastContainer" class="forecast-container"></div>
-</div>
+      <div class="controls">
+        <button id="toggleUnit">Toggle °C/°F</button>
+      </div>
+    </section>
+
+    <section id="hourlyForecast" class="hourly-forecast hidden">
+      <h3>Hourly (next 12 hours)</h3>
+      <div id="hourlyContainer" class="forecast-container"></div>
+    </section>
+
+    <section id="forecast" class="forecast hidden">
+      <h3>7-Day Forecast</h3>
+      <div id="forecastContainer" class="forecast-container"></div>
+    </section>
+  </main>
 
 <script src="script.js"></script>
 </body>
