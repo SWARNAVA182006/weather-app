@@ -75,8 +75,8 @@ async function getWeather(city) {
         description.textContent = `Weather: ${data.weather[0].description}`;
         humidity.textContent = `Humidity: ${data.main.humidity}%`;
         wind.textContent = `Wind: ${data.wind.speed} m/s`;
-        sunrise.textContent = `${new Date((data.sys.sunrise + data.timezone) * 1000).toUTCString().slice(-12, -4)}`;
-        sunset.textContent = `${new Date((data.sys.sunset + data.timezone) * 1000).toUTCString().slice(-12, -4)}`;
+        sunrise.textContent = new Date((data.sys.sunrise + data.timezone) * 1000).toUTCString().slice(-12, -4);
+        sunset.textContent = new Date((data.sys.sunset + data.timezone) * 1000).toUTCString().slice(-12, -4);
         weatherIcon.src = `http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
 
         const weatherMain = data.weather[0].main.toLowerCase();
@@ -104,26 +104,17 @@ function setBackground(weatherMain, sunriseUnix, sunsetUnix, timezoneOffset) {
     if (isNight) {
         if (weatherMain.includes("cloud")) bgFile = "night_cloudy.jpeg";
         else if (weatherMain.includes("rain") || weatherMain.includes("drizzle")) bgFile = "night_rainy.jpeg";
-        else if (weatherMain.includes("mist") || weatherMain.includes("fog")) bgFile = "night_clear.jpeg";
         else bgFile = "night_clear.jpeg";
     } else {
         if (weatherMain.includes("cloud")) bgFile = "day_cloudy.jpeg";
         else if (weatherMain.includes("rain") || weatherMain.includes("drizzle")) bgFile = "day_rainy.jpeg";
-        else if (weatherMain.includes("mist") || weatherMain.includes("fog")) bgFile = "day_sunny.jpeg";
         else bgFile = "day_sunny.jpeg";
     }
 
-    const bgPath = `assets/backgrounds/${bgFile}`;
-
-    const body = document.body;
-    const img = new Image();
-    img.src = bgPath;
-    img.onload = () => {
-        body.style.backgroundImage = `url('${bgPath}')`;
-        body.style.backgroundRepeat = 'no-repeat';
-        body.style.backgroundSize = 'cover';
-        body.style.backgroundPosition = 'center';
-    };
+    document.body.style.backgroundImage = `url('assets/backgrounds/${bgFile}')`;
+    document.body.style.backgroundRepeat = 'no-repeat';
+    document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundPosition = 'center';
 }
 
 async function getForecast(lat, lon) {
