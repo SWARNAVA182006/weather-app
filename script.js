@@ -42,19 +42,17 @@ toggleUnit.addEventListener('click', () => {
 
 async function getWeather(city) {
     try {
-        const formattedCity = city.toLowerCase().split(' ')
-            .map(w => w.charAt(0).toUpperCase() + w.slice(1))
-            .join(' ');
+        const formattedCity = city.toLowerCase().split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 
         let response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(formattedCity)}&appid=${apiKey}&units=metric`);
         let data = await response.json();
 
-        if (data.cod !== 200) {
+        if(data.cod !== 200){
             response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(formattedCity)},IN&appid=${apiKey}&units=metric`);
             data = await response.json();
         }
 
-        if (data.cod !== 200) {
+        if(data.cod !== 200){
             errorMsg.textContent = "City not found!";
             errorMsg.classList.remove('hidden');
             weatherCard.classList.add('hidden');
@@ -75,16 +73,11 @@ async function getWeather(city) {
         description.textContent = `Weather: ${data.weather[0].description}`;
         humidity.textContent = `Humidity: ${data.main.humidity}%`;
         wind.textContent = `Wind: ${data.wind.speed} m/s`;
-        sunrise.textContent = new Date((data.sys.sunrise + data.timezone) * 1000).toUTCString().slice(-12, -4);
-        sunset.textContent = new Date((data.sys.sunset + data.timezone) * 1000).toUTCString().slice(-12, -4);
+        sunrise.textContent = new Date((data.sys.sunrise + data.timezone) * 1000).toUTCString().slice(-12,-4);
+        sunset.textContent = new Date((data.sys.sunset + data.timezone) * 1000).toUTCString().slice(-12,-4);
         weatherIcon.src = `http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
 
-        const weatherMain = data.weather[0].main.toLowerCase();
-        const sunriseUnix = data.sys.sunrise;
-        const sunsetUnix = data.sys.sunset;
-        const timezoneOffset = data.timezone;
-        setBackground(weatherMain, sunriseUnix, sunsetUnix, timezoneOffset);
-
+        setBackground(data.weather[0].main.toLowerCase(), data.sys.sunrise, data.sys.sunset, data.timezone);
         getForecast(data.coord.lat, data.coord.lon);
 
     } catch(err) {
@@ -93,67 +86,24 @@ async function getWeather(city) {
     }
 }
 
-function setBackground(weatherMain, sunriseUnix, sunsetUnix, timezoneOffset) {
-    const nowUTC = Math.floor(Date.now() / 1000);
+function setBackground(weatherMain, sunriseUnix, sunsetUnix, timezoneOffset){
+    const nowUTC = Math.floor(Date.now()/1000);
     const localTime = nowUTC + timezoneOffset;
-
     const isNight = (localTime >= sunsetUnix || localTime < sunriseUnix);
 
-    let bgFile = "";
+    let bgFile = "day_sunny.jpeg"; // default
 
-    if (isNight) {
-        if (weatherMain.includes("cloud")) bgFile = "night_cloudy.jpeg";
-        else if (weatherMain.includes("rain") || weatherMain.includes("drizzle")) bgFile = "night_rainy.jpeg";
-        else bgFile = "night_clear.jpeg";
+    if(isNight){
+        if(weatherMain.includes("cloud")) bgFile="night_cloudy.jpeg";
+        else if(weatherMain.includes("rain") || weatherMain.includes("drizzle")) bgFile="night_rainy.jpeg";
+        else if(weatherMain.includes("mist") || weatherMain.includes("fog")) bgFile="night_mist.jpeg";
+        else bgFile="night_clear.jpeg";
     } else {
-        if (weatherMain.includes("cloud")) bgFile = "day_cloudy.jpeg";
-        else if (weatherMain.includes("rain") || weatherMain.includes("drizzle")) bgFile = "day_rainy.jpeg";
-        else bgFile = "day_sunny.jpeg";
+        if(weatherMain.includes("cloud")) bgFile="day_cloudy.jpeg";
+        else if(weatherMain.includes("rain") || weatherMain.includes("drizzle")) bgFile="day_rainy.jpeg";
+        else if(weatherMain.includes("mist") || weatherMain.includes("fog")) bgFile="day_mist.jpeg";
+        else bgFile="day_sunny.jpeg";
     }
 
     document.body.style.backgroundImage = `url('assets/backgrounds/${bgFile}')`;
-    document.body.style.backgroundRepeat = 'no-repeat';
-    document.body.style.backgroundSize = 'cover';
-    document.body.style.backgroundPosition = 'center';
-}
-
-async function getForecast(lat, lon) {
-    try {
-        const response = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,alerts&units=metric&appid=${apiKey}`);
-        const data = await response.json();
-
-        // 7-day forecast
-        forecastContainer.innerHTML = "";
-        forecast.classList.remove('hidden');
-        data.daily.slice(0, 7).forEach(day => {
-            const date = new Date(day.dt*1000);
-            const card = document.createElement('div');
-            card.className = 'forecast-card';
-            card.innerHTML = `
-                <p>${date.toLocaleDateString('en-US', {weekday: 'short'})}</p>
-                <img src="http://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png" alt="icon">
-                <p>${day.temp.day.toFixed(1)}°C</p>
-                <p>${day.weather[0].main}</p>
-            `;
-            forecastContainer.appendChild(card);
-        });
-
-        // Hourly forecast
-        hourlyContainer.innerHTML = "";
-        hourlyForecast.classList.remove('hidden');
-        data.hourly.slice(0, 12).forEach(hour => {
-            const date = new Date(hour.dt*1000);
-            const card = document.createElement('div');
-            card.className = 'forecast-card';
-            card.innerHTML = `
-                <p>${date.getHours()}:00</p>
-                <img src="http://openweathermap.org/img/wn/${hour.weather[0].icon}@2x.png" alt="icon">
-                <p>${hour.temp.toFixed(1)}°C</p>
-            `;
-            hourlyContainer.appendChild(card);
-        });
-
-    } catch(err) {
-        console.error(err);
-    }
 }
