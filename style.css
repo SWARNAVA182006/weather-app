@@ -3,24 +3,35 @@ body {
   font-family: 'Roboto', sans-serif;
   transition: background 0.5s ease;
   background: linear-gradient(to right, #6dd5ed, #2193b0);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.app-container {
-  text-align: center;
-  padding: 30px 20px;
-  max-width: 400px;
-  margin: auto;
+header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+  background: rgba(0,0,0,0.3);
   color: #fff;
 }
 
+header img#logo {
+  width: 50px;
+  margin-right: 10px;
+}
+
 h1 {
-  margin-bottom: 20px;
+  margin: 0;
 }
 
 .search-box {
   display: flex;
   justify-content: center;
-  margin-bottom: 20px;
+  margin: 20px 0;
 }
 
 input {
@@ -28,6 +39,7 @@ input {
   border-radius: 10px 0 0 10px;
   border: none;
   flex: 1;
+  min-width: 200px;
 }
 
 button {
@@ -44,11 +56,14 @@ button:hover {
   background-color: #f57c00;
 }
 
-.weather-card {
+.weather-card, .forecast {
   background: rgba(0,0,0,0.3);
   border-radius: 15px;
   padding: 20px;
-  margin-top: 10px;
+  margin: 10px;
+  color: #fff;
+  width: 90%;
+  max-width: 400px;
 }
 
 .weather-card img {
@@ -58,7 +73,17 @@ button:hover {
 
 .hidden { display: none; }
 
-#errorMsg {
-  color: #ff6b6b;
-  margin-top: 10px;
+.forecast-container {
+  display: flex;
+  justify-content: space-between;
+  overflow-x: auto;
+}
+
+.forecast-card {
+  background: rgba(255,255,255,0.2);
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+  min-width: 70px;
+  margin-right: 10px;
 }
