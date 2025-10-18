@@ -36,7 +36,7 @@ async function getWeather(query){
     const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(query)}&appid=${apiKey}&units=metric`);
     const data = await res.json();
 
-    if(data.cod && data.cod !== 200){
+    if(data.cod && data.cod != 200){
       showError(data.message);
       return;
     }
@@ -54,8 +54,8 @@ async function getWeather(query){
     weatherIcon.src = `http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
     weatherIcon.alt = data.weather[0].description;
 
-    // Background logic (instant)
-    setBackgroundWithWeather(data);
+    // Correct background logic
+    setBackground(data);
 
     weatherCard.classList.remove('d-none');
 
@@ -80,8 +80,12 @@ function clearError(){
   errorMsg.textContent = '';
 }
 
-function setBackgroundWithWeather(data){
-  const hour = new Date((data.dt + data.timezone) * 1000).getUTCHours();
+// Day/night + weather background logic
+function setBackground(data){
+  const timezoneOffset = data.timezone; // seconds
+  const dtUTC = data.dt; // seconds
+  const localTime = new Date((dtUTC + timezoneOffset) * 1000);
+  const hour = localTime.getUTCHours();
   const isNight = hour < 6 || hour >= 18;
 
   const condition = data.weather[0].main.toLowerCase();
