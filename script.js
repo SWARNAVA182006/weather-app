@@ -1,7 +1,6 @@
 /* Final robust script.js (Bootstrap UI) */
 const apiKey = '2ecae6763c9bcb92dd08c37f165b10ba';
 
-
 const searchBtn = document.getElementById('searchBtn');
 const cityInput  = document.getElementById('cityInput');
 const errorMsg   = document.getElementById('errorMsg');
