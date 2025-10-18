@@ -4,61 +4,100 @@
   --text: #ffffff;
 }
 
-/* page default background = skyblue */
-html,body{ height:100%; margin:0; }
+/* Basic layout + default skyblue background */
+html,body{height:100%; margin:0;}
 body{
   font-family: 'Roboto', sans-serif;
   color:var(--text);
   display:flex;
   flex-direction:column;
-  background-color: skyblue;   /* default before any search */
+  align-items:center;
+  background-color: skyblue; /* default */
   background-size:cover;
   background-position:center;
-  transition: background 0.6s ease, background-color 0.6s ease;
+  transition: background 0.5s ease;
   -webkit-font-smoothing:antialiased;
 }
 
-/* header */
-header{ background: rgba(0,0,0,0.18); }
-#logo{ width:90px; height:auto; }
-.app-title{ font-size:1.9rem; margin:0; }
+/* Header */
+header{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background: rgba(0,0,0,0.25);
+}
+#logo{ width:90px; margin-right:15px; }
+header h1{ margin:0; font-size:36px; }
 
-/* search */
-.input-group .form-control-lg{ font-size:1.05rem; padding:0.9rem 1rem; }
-#searchBtn{ font-weight:600; }
+/* Main container spacing */
+main{ width:100%; display:flex; flex-direction:column; align-items:center; padding:10px 16px 60px; }
 
-/* error */
-#errorMsg{ max-width:600px; margin:0 auto 16px; }
+/* Search */
+.search-section{ display:flex; gap:0; margin:24px 0; }
+#cityInput{
+  padding:16px; font-size:18px; min-width:320px; border-radius:10px 0 0 10px; border:none;
+}
+#searchBtn{
+  padding:16px 22px; font-size:18px; background:var(--accent); color:#fff; border:none; cursor:pointer;
+  border-radius:0 10px 10px 0;
+}
+#searchBtn:hover{ filter:brightness(.95); }
 
-/* weather card */
-.weather-card, .card{ background:var(--card-bg); border:none; border-radius:16px; box-shadow:0 8px 30px rgba(0,0,0,0.35); }
-#weatherCard .card-body{ padding:2rem; }
-.big-icon{ width:160px; height:160px; object-fit:contain; }
+/* Error message */
+#errorMsg{ color:#ffdddd; background:rgba(255,0,0,0.12); padding:8px 12px; border-radius:8px; margin-top:8px; }
 
-/* info list: icons as bullet-like */
-.info-list p{ display:flex; align-items:center; gap:14px; font-size:1.15rem; margin:8px 0; }
-.info-icon{ width:30px; height:30px; object-fit:contain; }
+/* Weather card */
+.weather-card{
+  background:var(--card-bg);
+  border-radius:18px;
+  padding:28px;
+  width:90%;
+  max-width:600px;
+  text-align:center;
+  margin:12px 0;
+  box-shadow:0 8px 30px rgba(0,0,0,0.35);
+}
+.big-icon{ width:160px; height:160px; object-fit:contain; margin:8px 0; }
 
-/* forecast cards */
+/* Info lines: icons as bullet-like */
+.weather-card p{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin:10px 0;
+  font-size:20px; /* larger text */
+}
+.weather-card p img{ width:28px; height:28px; object-fit:contain; }
+
+/* Controls */
+.controls{ margin-top:12px; }
+.controls button{ padding:10px 14px; font-size:16px; border-radius:8px; background:#333; color:#fff; border:none; cursor:pointer; }
+
+/* Forecast containers */
+.forecast-container{
+  display:flex;
+  gap:12px;
+  overflow-x:auto;
+  padding:8px 4px;
+}
 .forecast-card{
-  min-width:110px;
+  min-width:100px;
   background: rgba(255,255,255,0.12);
   border-radius:12px;
-  padding:8px 10px;
-  margin-right:12px;
+  padding:10px;
   text-align:center;
-  color:#fff;
+  font-size:16px;
 }
-.forecast-card img{ width:48px; height:48px; }
 
-/* hourly small cards */
-.hour-card{ min-width:100px; background: rgba(255,255,255,0.08); border-radius:10px; padding:8px; margin-right:10px; color:#fff; text-align:center; }
+/* Hidden helper */
+.hidden{ display:none; }
 
-/* responsive tweaks */
-@media (max-width:576px){
+/* Responsive */
+@media (max-width:420px){
+  #cityInput{ min-width:200px; font-size:16px; padding:12px; }
+  header h1{ font-size:28px; }
+  .weather-card p{ font-size:16px; }
   .big-icon{ width:120px; height:120px; }
-  .info-icon{ width:24px; height:24px; }
-  .info-list p{ font-size:1rem; gap:10px; }
-  .app-title{ font-size:1.5rem; }
-  #cityInput{ font-size:16px; }
 }
